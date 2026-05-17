@@ -435,6 +435,22 @@
       <div class="meta-pill"><i class="ti ti-list" style="font-size:14px"></i> 12 questions</div>
       <div class="meta-pill"><i class="ti ti-school" style="font-size:14px"></i> For students</div>
     </div>
+    <div style="margin-bottom: 16px;">
+      <input
+        type="email"
+        id="user-email"
+        placeholder="Your email address"
+        style="width:100%; padding:10px 14px; font-size:14px; font-family:'Inter',sans-serif;
+               border:1px solid var(--border); border-radius:var(--radius-sm);
+               background:var(--surface); color:var(--text); outline:none;
+               transition: border-color .15s;"
+        onfocus="this.style.borderColor='var(--accent)'"
+        onblur="this.style.borderColor='var(--border)'"
+      />
+      <div id="email-error" style="font-size:12px; color:#c0392b; margin-top:6px; display:none;">
+        <i class="ti ti-alert-circle" style="font-size:13px;vertical-align:-2px;"></i> Please enter a valid email to continue.
+      </div>
+    </div>
     <button class="btn btn-primary" onclick="startQuiz()">Start assessment <i class="ti ti-arrow-right"></i></button>
   </div>
 
@@ -624,7 +640,21 @@ function showScreen(id) {
   window.scrollTo(0, 0);
 }
 
-function startQuiz() { showScreen('quiz'); renderQ(); }
+function startQuiz() {
+  const emailInput = document.getElementById('user-email');
+  const emailError = document.getElementById('email-error');
+  const email = emailInput.value.trim();
+  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  if (!valid) {
+    emailError.style.display = 'block';
+    emailInput.focus();
+    return;
+  }
+  emailError.style.display = 'none';
+  window._userEmail = email; // available throughout the session as window._userEmail
+  showScreen('quiz');
+  renderQ();
+}
 function startFromResult() { isSharedResult = false; showScreen('welcome'); }
 
 // ── QUIZ ───────────────────────────────────────────────────────────────────
